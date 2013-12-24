@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Add Member</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="stylesheet" href="css/jquery.mobile-1.0rc1.min.css" />
+<link rel="stylesheet" href="css/styles.css" />
+<script src="js/jquery.js"></script>
+<script src="js/jquery.mobile-1.0rc1.min.js"></script>
+<script type="text/javascript">
+
+//$(document).ready(function(){
+
+	   // jQuery methods go here...
+//$("#addMember").submit(
+	//	function(){
+			
+		//});
+	   
+//	});
+	
+jQuery(document).ready( function() {
+	
+
+$(function(){
+    $.getJSON("http://localhost/sapp/index.php?actionName=fetchTeams", function(result){
+		$.each(result.teams, function (index, value) {
+		//alert(value[0]);
+		 var teamDetails=JSON.parse(value);
+//		 alert(teamDetails.teamId);
+		$("#teamId").append('<option value="'+teamDetails.teamId+'">'+teamDetails.teamName+'</option>');
+		});
+		$("#teamId").selectmenu('refresh',true);
+	});
+});
+	
+    jQuery('form#addMember').bind('submit', function(event){
+		
+		var teamNameValue=$('#teamId :selected').text();	
+		$("#teamName").val(teamNameValue);
+        console.log($("#addMember").serialize());
+       $.post( "http://localhost/sapp/index.php",$("#addMember").serialize());
+	
+    });
+});
+</script>
+</head>
+    
+<body>
+        
+<div id="addMemberPage" data-role="page" >
+
+	<div data-role="header" data-position="fixed">
+		<h1>Add New Member</h1>
+	</div>
+
+	<div data-role="content">
+    	
+    	<form id="addMember" name="addMember" method="post">
+		
+        <div data-role="fieldcontain">
+        <label for="memberName">Name:</label>
+        <input type="text" name="memberName" id="memberName">
+        <label for="memberEmail">Email:</label>
+        <input type="text" name="memberEmail" id="memberEmail">
+        <label for="memberPhone">Phone:</label>
+        <input type="tel" name="memberPhone" id="memberPhone"><br/>
+		<label for="teamId">Team Name:</label>
+		<select  name="teamId" id="teamId" data-theme="a" data-overlay-theme="a" data-native-menu="false"  >
+			<option value="0">Select Team Name</option>
+		</select>	
+		<input type="hidden" name="teamName" id="teamName" />
+      	</div>
+	      <input type="submit" name="actionName" id="addMemberToDB" value="Add">
+
+    	</form>     
+	
+    </div>		
+
+</div>
+
+
+
+
+</body>
+
+</html>
